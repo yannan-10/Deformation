@@ -1,10 +1,3 @@
-//
-//  Favoritesview.swift
-//  Deformation
-//
-//  Created by BAIYANNAN on 2026/11/02.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -97,6 +90,7 @@ struct NoteDetailView: View {
     // @Bindable：可以直接修改 note，修改会自动保存
     @Bindable var note: SavedNote
     @State private var isEditing = false
+    @State private var copied = false   // 是否刚刚复制过（用来切换图标）
 
     var body: some View {
         ScrollView {
@@ -118,11 +112,31 @@ struct NoteDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            // 复制文字（可以粘贴到 AI 搜索里提问）
+            ToolbarItem(placement: .primaryAction) {
+                if !isEditing {
+                    Button {
+                        copyText()
+                    } label: {
+                        Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                    }
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button(isEditing ? "完成" : "编辑") {
                     isEditing.toggle()
                 }
             }
+        }
+    }
+
+    /// 复制文字，图标会变成 ✓ 1.5 秒
+    private func copyText() {
+        UIPasteboard.general.string = note.text
+        copied = true
+        Task {
+            try? await Task.sleep(for: .seconds(1.5))
+            copied = false
         }
     }
 }

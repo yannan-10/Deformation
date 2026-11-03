@@ -10,6 +10,7 @@ struct ResultView: View {
     @State private var errorMessage: String?
     @State private var isEditing = false        // 是否处于编辑文字模式
     @State private var savedNote: SavedNote?    // 收藏后的记录（nil = 还没收藏）
+    @State private var copied = false           // 是否刚刚复制过（用来切换图标）
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -80,6 +81,16 @@ struct ResultView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("关闭") { dismiss() }
                 }
+                // 复制文字（可以粘贴到 AI 搜索里提问）
+                ToolbarItem(placement: .primaryAction) {
+                    if canSave && !isEditing {
+                        Button {
+                            copyText()
+                        } label: {
+                            Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                        }
+                    }
+                }
                 ToolbarItem(placement: .primaryAction) {
                     if !isLoading && errorMessage == nil {
                         Button(isEditing ? "完成" : "编辑") {
@@ -106,6 +117,16 @@ struct ResultView: View {
             errorMessage = "识别失败：\(error.localizedDescription)"
         }
         isLoading = false
+    }
+
+    /// 复制识别出的文字，图标会变成 ✓ 1.5 秒
+    private func copyText() {
+        UIPasteboard.general.string = text
+        copied = true
+        Task {
+            try? await Task.sleep(for: .seconds(1.5))
+            copied = false
+        }
     }
 
     /// 保存文字到收藏（只存文字，不存照片）

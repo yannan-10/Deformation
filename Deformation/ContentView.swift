@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Deformation
-//
-//  Created by BAIYANNAN on 2026/10/31.
-//
-
 import SwiftUI
 import SwiftData
 import PhotosUI
@@ -25,6 +18,7 @@ struct ContentView: View {
     @State private var pickedImage: PickedImage?       // 要拿去识别的图片
 
     @State private var showFavorites = false           // 是否显示收藏列表
+    @State private var showAISearch = false            // 是否显示 AI 搜索
 
     var body: some View {
         ZStack {
@@ -65,7 +59,7 @@ struct ContentView: View {
                             showPhotoPicker = true
                         }
                         FeatureButton(title: "AI搜索", icon: "magnifyingglass") {
-                            // TODO: AI 搜索
+                            showAISearch = true
                         }
                         FeatureButton(title: "收藏", icon: "heart.fill") {
                             showFavorites = true
@@ -90,6 +84,10 @@ struct ContentView: View {
         // 全屏打开收藏列表
         .fullScreenCover(isPresented: $showFavorites) {
             FavoritesView()
+        }
+        // 全屏打开 AI 搜索
+        .fullScreenCover(isPresented: $showAISearch) {
+            AISearchView()
         }
         // 打开系统相册（只显示图片）
         .photosPicker(isPresented: $showPhotoPicker,
