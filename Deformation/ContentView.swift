@@ -22,8 +22,8 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            // 背景（浅蓝色）
-            Color(red: 0.45, green: 0.76, blue: 0.95)
+            // 背景
+            Color.appBackground
                 .ignoresSafeArea()
 
             VStack(spacing: 40) {
@@ -39,20 +39,14 @@ struct ContentView: View {
                         Text("相机")
                             .font(.title2)
                             .bold()
-                        Text("拍下日语文章，自动标注读音")
-                            .font(.footnote)
-                            .opacity(0.85)
                     }
                     .foregroundStyle(.white)
                     .frame(width: 280, height: 280)
-                    .background(Color(red: 0.85, green: 0.36, blue: 0.62))
+                    .background(Color.appAccent)
                     .clipShape(RoundedRectangle(cornerRadius: 24))
                 }
 
                 // MARK: 功能区
-                VStack(spacing: 16) {
-                    Text("功能")
-                        .font(.headline)
 
                     HStack(spacing: 20) {
                         FeatureButton(title: "相册", icon: "photo.on.rectangle") {
@@ -65,7 +59,7 @@ struct ContentView: View {
                             showFavorites = true
                         }
                     }
-                }
+                
 
                 Spacer()
             }
@@ -136,9 +130,9 @@ struct FeatureButton: View {
             VStack(spacing: 8) {
                 Image(systemName: icon)
                     .font(.system(size: 28))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.appAccent)
                     .frame(width: 80, height: 80)
-                    .background(Color(red: 0.88, green: 0.56, blue: 0.21))
+                    .background(Color.appAccentLight)
                     .clipShape(RoundedRectangle(cornerRadius: 18))
 
                 Text(title)
